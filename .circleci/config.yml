@@ -142,7 +142,7 @@ jobs:
     docker:
       # Docker image here that supports Ansible
     steps:
-      # Checkout code from git
+      - checkout
       # Add ssh keys with fingerprint
       # attach workspace
       - run:
@@ -161,7 +161,7 @@ jobs:
     docker:
       # Docker image here that supports NodeJS
     steps:
-      # Checkout code from git
+      - checkout
       - run:
           name: Run migrations
           command: |
@@ -178,7 +178,7 @@ jobs:
     docker:
       # Docker image here that supports AWS CLI
     steps:
-      # Checkout code from git
+      - checkout
       - run:
           name: Install dependencies
           command: |
@@ -199,7 +199,7 @@ jobs:
     docker:
       # Docker image here that supports Ansible
     steps:
-      # Checkout code from git
+      - checkout
       # Add ssh keys with fingerprint
       # attach workspace
       - run:
@@ -216,7 +216,7 @@ jobs:
     docker:
       # Lightweight Docker image 
     steps:
-      # Checkout code from git
+      - checkout
       - run:
           name: Install dependencies
           command: |
@@ -239,7 +239,7 @@ jobs:
     docker:
       # Docker image here that supports AWS CLI
     steps:
-      # Checkout code from git
+      - checkout
       - run:
           name: Install dependencies
           command: |
@@ -254,7 +254,7 @@ cleanup:
     docker:
       # Docker image here
     steps:
-      # Checkout code from git
+      - checkout
       - run:
           name: Get old stack workflow id
           command: |
