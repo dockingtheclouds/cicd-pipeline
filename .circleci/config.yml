@@ -135,6 +135,7 @@ jobs:
               --tags project=udacity-backend \
               --stack-name "backend-${CIRCLE_WORKFLOW_ID}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID}"
+            exit 1
       - run:
           name: Ensure front-end infrastructure exist
           command: |
@@ -143,6 +144,7 @@ jobs:
               --tags project=udacity-frontend \
               --stack-name frontend-"${CIRCLE_WORKFLOW_ID}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID}"
+            exit 1
       - run:
           name: Add back-end ip to ansible inventory
           command: |
@@ -309,7 +311,7 @@ workflows:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
           filters:
             branches:
-              only: [test-feature-branch]
+              only: [master]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
       - run-migrations:
