@@ -47,7 +47,6 @@ jobs:
             cd frontend
             npm i
             npm run lint
-            exit 1
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
@@ -65,7 +64,6 @@ jobs:
              cd backend
              npm i
              npm run lint
-             exit 1
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
@@ -77,8 +75,12 @@ jobs:
       - checkout
       - restore_cache:
           keys: [frontend-build]
-      - run: npm i
-      - run: npm run test
+      - run:
+          name: Front-end tests
+          command: |
+            cd frontend
+            npm i
+            npm run test
                 
   test-backend:
     docker:
