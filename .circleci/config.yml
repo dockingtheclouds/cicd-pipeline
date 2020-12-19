@@ -180,7 +180,7 @@ jobs:
 
   deploy-frontend:
     docker:
-      # Docker image here that supports AWS CLI
+      - image: amazon/aws-cli
     steps:
       - checkout
       - run:
@@ -219,7 +219,7 @@ jobs:
 
   smoke-test:
     docker:
-      # Lightweight Docker image 
+      - image: alpine:latest
     steps:
       - checkout
       - run:
@@ -242,7 +242,7 @@ jobs:
 
   cloudfront-update:
     docker:
-      # Docker image here that supports AWS CLI
+      - image: amazon/aws-cli
     steps:
       - checkout
       - run:
@@ -257,7 +257,7 @@ jobs:
 
 cleanup:
     docker:
-      # Docker image here
+      - image: circleci/node:13.8.0
     steps:
       - checkout
       - run:
