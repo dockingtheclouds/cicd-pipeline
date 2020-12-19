@@ -42,7 +42,7 @@ jobs:
       - restore_cache:
           keys: [frontend-build]
       - run:
-          name: Build front-end
+          name: Build frontend
           command: |
             cd frontend
             npm i
@@ -59,7 +59,7 @@ jobs:
       - restore_cache:
           keys: [backend-build]
       - run:
-          name: Back-end build
+          name: Backend build
           command: |
              cd backend
              npm i
@@ -76,7 +76,7 @@ jobs:
       - restore_cache:
           keys: [frontend-build]
       - run:
-          name: Front-end tests
+          name: Frontend tests
           command: |
             cd frontend
             npm i
@@ -89,8 +89,12 @@ jobs:
       - checkout
       - restore_cache:
           keys: [backend-build]
-      - run: npm i
-      - run: npm run test
+      - run:
+          name: Backend tests
+          command: |
+            cd backend
+            npm i
+            npm run test
             
   scan-frontend:
     docker:
@@ -99,8 +103,11 @@ jobs:
       - checkout
       - restore_cache:
           keys: [frontend-build]
-      - run: cd ~/cicd-pipeline/frontend
-      - run: npm audit --audit-level=critical
+      - run:
+          name: Scanning Frontend
+          command: |
+            cd frontend
+            npm audit
 
   scan-backend:
     docker:
@@ -109,7 +116,11 @@ jobs:
       - checkout
       - restore_cache:
           keys: [backend-build]
-      - run: npm audit
+      - run:
+          name: Scanning Backend
+          command: |
+            cd backend
+            npm audit
 
   deploy-infrastructure:
     docker:
