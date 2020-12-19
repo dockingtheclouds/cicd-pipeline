@@ -44,6 +44,7 @@ jobs:
       - run:
           name: Build front-end
           command: |
+            cd ~/cicd-pipeline/frontend
             npm i
             npm run lint
             exit 1
