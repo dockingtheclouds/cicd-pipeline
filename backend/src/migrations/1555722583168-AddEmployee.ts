@@ -1,4 +1,5 @@
-import {MigrationInterface, QueryRunner} from 'typeorm';
+// @ts-ignore
+import {MigrationInterface, QueryRunner} from "typeorm";
 
 export class AddEmployee1555722583168 implements MigrationInterface {
 

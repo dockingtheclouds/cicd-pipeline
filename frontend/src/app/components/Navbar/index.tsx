@@ -74,7 +74,7 @@ export class Navbar extends React.Component<Navbar.Props, Navbar.State> {
             aria-label='Close Navigation Bar'
             type='button'
           >
-            <span aria-hidden="true">×</span>
+            <span aria-hidden='true'>×</span>
           </button>
 
           <div className={style['g-applogo']}>
