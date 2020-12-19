@@ -4,14 +4,14 @@ commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
     parameters:
-         to:
+         stack_name:
            type: string
     steps:
       - run:
           name: Destroy environments
           when: on_fail
           command: |
-            # Your code here
+            aws cloudformation delete-stack --stack-name << parameters.stack_name >>
             exit 1
 
   revert-migrations:
@@ -21,15 +21,15 @@ commands:
     steps:
       - run:
           name: Revert migrations
-          # Add when this will run
+          when: on_success
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
             SUCCESS = 1
             if(( $SUCCESS==1 )); 
             then
-            #  cd ~/project/backend
-            #  npm install
-            #  Add revert code here. You can find this in the Getting Started section.
+            cd ~/cicd-pipeline/backend
+            npm install
+            npm migrations:revert
               exit 1
             fi
             
@@ -95,7 +95,8 @@ jobs:
       - checkout
       - restore_cache:
           keys: [frontend-build]
-      - run: npm audit
+      - run: cd ~/cicd-pipeline/frontend
+      - run: npm audit --audit-level=critical
 
   scan-backend:
     docker:
@@ -140,26 +141,29 @@ jobs:
 
   configure-infrastructure:
     docker:
-      # Docker image here that supports Ansible
+      - image: python:3.7-alpine3.11
     steps:
       - checkout
-      # Add ssh keys with fingerprint
-      # attach workspace
+      - add_ssh_keys:
+          fingerprints: ['']
+      - attach_workspace:
+          at: /tmp/workspace
       - run:
           name: Install dependencies
           command: |
-            # Your code here
+            apk add --update ansible
             exit 1
       - run:
           name: Configure server
           command: |
-            # Your code here
+            ansible-playbook -i inventory.txt configure-server.yml
             exit 1
-      # Here's where you will add some code to rollback on failure      
+      - destroy_environment:
+          stack_name: backend-"${CIRCLE_WORKFLOW_ID}"
 
   run-migrations:
     docker:
-      # Docker image here that supports NodeJS
+      - image: circleci/node:13.8.0
     steps:
       - checkout
       - run:
@@ -193,11 +197,12 @@ jobs:
           name: Deploy frontend objects
           command: |
             # your code here
-      # Here's where you will add some code to rollback on failure      
+      - destroy_environment:
+          stack_name: frontend-"${CIRCLE_WORKFLOW_ID}"
                     
   deploy-backend:
     docker:
-      # Docker image here that supports Ansible
+      - image: python:3.7-alpine3.11
     steps:
       - checkout
       # Add ssh keys with fingerprint
