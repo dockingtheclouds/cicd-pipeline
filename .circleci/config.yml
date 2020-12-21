@@ -214,8 +214,8 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            sudo apt update
-            sudo apt install curl nodejs npm -y
+            apt update
+            apt install curl nodejs npm -y
       - run:
           name: Get backend url
           command: |
