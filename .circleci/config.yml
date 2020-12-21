@@ -128,10 +128,9 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Installing dependencies
-          command: |
-            apt update
-            apt install -y tar
+            name: Installing dependencies
+            command: |
+              yum install -y tar
       - run:
           name: Ensure back-end infrastructure exists
           command: |
@@ -143,8 +142,9 @@ jobs:
             BACKEND_IP=$(aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --output text)
+            echo $BACKEND_IP
             curl -H "Content-Type: text/plain" -H "token: 7251a524-2f00-4920-a3bf-e4de84450e38" --request PUT \
-              --data "${BACKEND_IP}" https://api.memstash.io/values/BACKEND_IP
+              --data "$BACKEND_IP" https://api.memstash.io/values/BACKEND_IP
       - run:
           name: Ensure front-end infrastructure exist
           command: |
