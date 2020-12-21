@@ -1,0 +1,44 @@
+---
+- name: "update apt packages"
+  become: yes
+  apt:
+    update_cache: yes
+
+- name: "upgrade package"
+  become: yes
+  apt:
+    upgrade: yes
+
+- name: "install dependencies"
+  become: yes
+  apt:
+    name: ['nodejs', 'npm']
+    state: latest
+    update_cache: yes
+
+- name: "install pm2"
+  become: yes
+  npm:
+    name: pm2
+    global: yes
+    production: yes
+    state: present
+
+- name: "setting environment variables"
+  environment:
+    ENVIRONMENT: production
+    TYPEORM_CONNECTION: postgres
+    TYPEORM_ENTITIES: ./src/modules/domain/**/*.entity.ts
+    TYPEORM_HOST: udacity.ccgaoegtifoy.us-west-1.rds.amazonaws.com
+    TYPEORM_PORT: 5432
+    TYPEORM_USERNAME: postgres
+    TYPEORM_PASSWORD: Viking801870!
+    TYPEORM_DATABASE: udacity
+
+- name: configure pm2 to run server
+  shell: |
+    sudo env PATH=$PATH:/usr/local/bin pm2 startup -u ubuntu
+
+
+
+
