@@ -132,15 +132,20 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/backend.yml \
-              --tags project=udacity-backend \
+              --tags project=udacity Name=Backend \
               --stack-name "backend-${CIRCLE_WORKFLOW_ID}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID}"
+            BACKEND_IP=$(aws ec2 describe-instances \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --output text)
+            curl -H "Content-Type: text/plain" -H "token: 7251a524-2f00-4920-a3bf-e4de84450e38" --request PUT \
+              --data "${BACKEND_URL}" https://api.memstash.io/values/BACKEND_IP
       - run:
           name: Ensure front-end infrastructure exist
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
-              --tags project=udacity-frontend \
+              --tags project=udacity Name=Frontend \
               --stack-name frontend-"${CIRCLE_WORKFLOW_ID}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID}"
       - run:
@@ -149,7 +154,6 @@ jobs:
             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --output text >> inventory.txt
-            exit 1
       - persist_to_workspace:
           root: ~/
           paths:
@@ -164,17 +168,15 @@ jobs:
       - add_ssh_keys:
           fingerprints: ['21:a2:0d:9e:26:5a:7a:77:95:2e:1b:31:ab:e2:ad:51']
       - attach_workspace:
-          at: /tmp/workspace
+          at: ~/project/.circleci/ansible
       - run:
           name: Install dependencies
           command: |
             apk add --update ansible
-            exit 1
       - run:
           name: Configure server
           command: |
             ansible-playbook -i inventory.txt configure-server.yml
-            exit 1
       - destroy-environment:
           stack_name: backend-"${CIRCLE_WORKFLOW_ID}"
 
@@ -186,12 +188,16 @@ jobs:
       - run:
           name: Run migrations
           command: |
-            # Your code here
-            exit 1
+            npm run migration > migration_result.txt
       - run:
           name: Send migration results to memstash
           command: |
-            # Your code here
+            grep successfully migration_result.txt
+            if [ $? -eq 0 ]
+              echo "Didn't migrate successfully"
+            else
+              curl -H "Content-Type: text/plain" -H "token: 7251a524-2f00-4920-a3bf-e4de84450e38" --request PUT \
+                --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
             exit 1
      # Here's where you will add some code to rollback on failure      
 
@@ -203,17 +209,20 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            # your code here
+            sudo apt update
+            sudo apt install curl nodejs npm -y
       - run:
           name: Get backend url
           command: |
-            # your code here
+            BACKEND_IP=$(curl -H "token: 7251a524-2f00-4920-a3bf-e4de84450e38" \
+              --request GET https://api.memstash.io/values/BACKEND_IP)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
       - run:
           name: Deploy frontend objects
           command: |
-            # your code here
+            npm run build
+            aws s3 sync ./dist/frontend s3://udapeople-"${CIRCLE_WORKFLOW_ID}"
       - destroy-environment:
           stack_name: frontend-"${CIRCLE_WORKFLOW_ID}"
                     
@@ -222,16 +231,18 @@ jobs:
       - image: python:3.7-alpine3.11
     steps:
       - checkout
-      # Add ssh keys with fingerprint
-      # attach workspace
+      - add_ssh_keys:
+          fingerprints: [ '21:a2:0d:9e:26:5a:7a:77:95:2e:1b:31:ab:e2:ad:51' ]
+      - attach_workspace:
+          at: ~/project/.circleci/ansible
       - run:
           name: Install dependencies
           command: |
-            # your code here
+            apk add --update ansible
       - run:
           name: Deploy backend
           command: |
-            # your code here
+            ansible-playbook -i inventory.txt deploy-backend.yml
       # Here's where you will add some code to rollback on failure  
 
   smoke-test:
