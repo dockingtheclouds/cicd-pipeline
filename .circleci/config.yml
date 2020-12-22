@@ -183,7 +183,7 @@ jobs:
           command: |
             apk add --update ansible
             pip install awscli
-            aws --version
+            yum install -y tar gzip
       - run:
           name: Configure server
           command: |
