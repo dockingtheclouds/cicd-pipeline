@@ -159,7 +159,6 @@ jobs:
           command: |
             echo "[web]" > inventory.txt
             aws ec2 describe-instances \
-              --filters "Name=tag:Name,Values=Backend" \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --output text >> inventory.txt
             cat inventory.txt
