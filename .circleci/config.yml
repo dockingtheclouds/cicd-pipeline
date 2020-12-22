@@ -20,14 +20,14 @@ commands:
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
     parameters:
-      workflow_id: string
+      migration_id: string
     steps:
       - run:
           name: Revert migrations
           when: on_fail
           command: |
             SUCCESS=$(curl -H "token: 7251a524-2f00-4920-a3bf-e4de84450e38" \
-              --request GET https://api.memstash.io/values/migration_<< parameters.workflow_id >>)
+              --request GET https://api.memstash.io/values/migration_"${CIRCLE_WORKFLOW_ID}")
             if(( $SUCCESS==1 ))
             then
               cd ~/cicd-pipeline/backend
@@ -213,8 +213,7 @@ jobs:
                 --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
             exit 1
             fi
-      - revert-migrations:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"
+      - revert-migrations
 
   deploy-frontend:
     docker:
@@ -290,8 +289,7 @@ jobs:
             fi
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID}"
-      - revert-migrations:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"
+      - revert-migrations
 
 
   cloudfront-update:
@@ -312,8 +310,7 @@ jobs:
               --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID}"
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID}"
-      - revert-migrations:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"
+      - revert-migrations
 
   cleanup:
     docker:
