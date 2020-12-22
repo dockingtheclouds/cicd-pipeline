@@ -181,9 +181,9 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            yum install -y tar gzip
             apk add --update ansible
             pip install awscli
-            yum install -y tar gzip
       - run:
           name: Configure server
           command: |
