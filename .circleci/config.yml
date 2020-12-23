@@ -204,7 +204,7 @@ jobs:
             cd ~/project/backend
             npm install
             npm audit fix --audit-level=critical --force
-            npm run migrations > migration_result.txt
+            npm run migrations:generate -- --n migration-${CIRCLE_WORKFLOW_ID} > migration_result.txt
       - run:
           name: Send migration results to memstash
           command: |
@@ -217,7 +217,6 @@ jobs:
               echo "migrate successful"
               curl -H "Content-Type: text/plain" -H "token: 7251a524-2f00-4920-a3bf-e4de84450e38" --request PUT \
                 --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
-            exit 1
             fi
       - revert-migrations
 
