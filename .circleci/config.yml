@@ -190,7 +190,6 @@ jobs:
           command: |
             cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
-            exit 1
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID}"
 
@@ -209,7 +208,7 @@ jobs:
       - run:
           name: Send migration results to memstash
           command: |
-            grep successfully migration_result.txt
+            grep "has been executed successfully" migration_result.txt
             if [ $? -eq 0 ]
               echo "Didn't migrate successfully"
               curl -H "Content-Type: text/plain" -H "token: 7251a524-2f00-4920-a3bf-e4de84450e38" --request PUT \
