@@ -199,14 +199,37 @@ jobs:
     steps:
       - checkout
       - run:
+          name: install awscli
+          command: |
+            sudo apt-get -y update
+            sudo apt-get -y install python3 \
+              python3-pip \
+              python3-setuptools
+            pip3 install --upgrade pip
+            pip3 --no-cache-dir install --upgrade awscli
+      - run:
           name: Run migrations
           command: |
             cd backend
+            npm install
+            touch .env
+
+            echo ENVIROMENT=$ENVIROMENT >> ./.env
+            echo TYPEORM_CONNECTION=$TYPEORM_CONNECTION >> ./.env
+            echo TYPEORM_MIGRATIONS_DIR=$TYPEORM_MIGRATIONS_DIR >> ./.env
+            echo TYPEORM_ENTITIES=$TYPEORM_ENTITIES >> ./.env
+            echo TYPEORM_MIGRATIONS=$TYPEORM_MIGRATIONS >> ./.env
+            echo TYPEORM_HOST=$TYPEORM_HOST >> ./.env
+            echo TYPEORM_PORT=$TYPEORM_PORT >> ./.env
+            echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> ./.env
+            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> ./.env
+            echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> ./.env
+
             npm run migrations > migration_result.txt
       - run:
           name: Send migration results to memstash
           command: |
-            if grep "has been executed successfully" migration_result.txt
+            if grep -q "has been executed successfully" migration_result.txt
             then
             echo "migrate successful"
             curl -H "Content-Type: text/plain" -H "token: ${CIRCLE_WORKFLOW_ID}" --request PUT \
@@ -216,6 +239,7 @@ jobs:
             curl -H "Content-Type: text/plain" -H "token: ${CIRCLE_WORKFLOW_ID}" --request PUT \
               --data "0" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
             fi
+      - destroy-environment
       - revert-migrations
 
   deploy-frontend:
