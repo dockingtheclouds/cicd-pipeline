@@ -42,7 +42,7 @@
         production: yes
         state: present
 
-    - name: configure environment variables
+    - name: "configure environment variables"
       environment:
         ENVIRONMENT: "{{ lookup('env', 'ENVIRONMENT') }}"
         TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
