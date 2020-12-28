@@ -188,7 +188,7 @@ jobs:
       - run:
           name: Configure server
           command: |
-            echo ENVIROMENT=Production > backend/.env
+            echo ENVIRONMENT=Production > backend/.env
             echo TYPEORM_CONNECTION=$TYPEORM_CONNECTION >> backend/.env
             echo TYPEORM_MIGRATIONS_DIR=$TYPEORM_MIGRATIONS_DIR >> backend/.env
             echo TYPEORM_ENTITIES=$TYPEORM_ENTITIES >> backend/.env
