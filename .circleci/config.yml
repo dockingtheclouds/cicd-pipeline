@@ -199,9 +199,8 @@ jobs:
             echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "backend/.env"
             echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
-            echo TOKEN=${CIRCLE_WORKFLOW_ID} >> "backend/.env"
             cd .circleci/ansible
-            ansible-playbook -i inventory.txt configure-server.yml --check
+            ansible-playbook -i inventory.txt configure-server.yml
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID}"
       - revert-migrations
@@ -223,7 +222,7 @@ jobs:
       - run:
           name: installing dependencies
           command: |
-            cd ./backend
+            cd backend
             npm install
       - run:
           name: Run migrations

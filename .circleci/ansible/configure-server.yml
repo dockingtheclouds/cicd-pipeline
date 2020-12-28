@@ -7,9 +7,8 @@
     ansible_python_interpreter: /usr/bin/python3
     ansible_host_key_checking: false
     ansible_stdout_callback: yaml
-    TOKEN: "{{ lookup('env', 'TOKEN') }}"
-    ENVIRONMENT: "{{ lookup('env', 'ENVIRONMENT') }}"
     environment:
+      ENVIRONMENT: "{{ lookup('env', 'ENVIRONMENT') }}"
       TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
       TYPEORM_ENTITIES: "{{ lookup('env', 'TYPEORM_ENTITIES') }}"
       TYPEORM_HOST: "{{ lookup('env', 'TYPEORM_HOST') }}"
@@ -24,7 +23,7 @@
         timeout: 600
 
     - name: "install python for Ansible."
-      raw: sudo apt -y install python3
+      raw: sudo apt -y install python3.7
 
   roles:
     - configure-server

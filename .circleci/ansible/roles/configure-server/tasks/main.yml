@@ -21,13 +21,6 @@
     state: latest
     update_cache: yes
 
-- name: "configure migration"
-  shell: |
-    cd /home/ubuntu/backend
-    npm run migrations > migration_results.txt
-    curl -H "Content-Type: text/plain" -H "token: {{ TOKEN }}" --request PUT \
-      --data "1" https://api.memstash.io/values/migration_{{ TOKEN }}
-
 - name: "install pm2"
   become: yes
   npm:
