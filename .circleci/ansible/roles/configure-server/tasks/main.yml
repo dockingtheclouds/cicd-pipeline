@@ -7,7 +7,7 @@
 - name: "upgrade package"
   become: yes
   apt:
-    upgrade: yes
+    upgrade: 'yes'
 
 - name: remove dependencies that are no longer required
   become: yes
@@ -17,7 +17,7 @@
 - name: "install dependencies"
   become: yes
   apt:
-    name: [ "nodejs", "npm" ]
+    name: ["nodejs", "npm"]
     state: latest
     update_cache: yes
 
@@ -29,9 +29,19 @@
     production: yes
     state: present
 
-- name: "configure pm2 to run server"
+- environment:
+    ENVIRONMENT:
+    TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
+    TYPEORM_ENTITIES: "{{ lookup('env', 'TYPEORM_ENTITIES') }}"
+    TYPEORM_HOST: "{{ lookup('env', 'TYPEORM_HOST') }}"
+    TYPEORM_PORT: "{{ lookup('env', 'TYPEORM_PORT') }}"
+    TYPEORM_USERNAME: "{{ lookup('env', 'TYPEORM_USERNAME') }}"
+    TYPEORM_PASSWORD: "{{ lookup('env', 'TYPEORM_PASSWORD') }}"
+    TYPEORM_DATABASE: "{{ lookup('env', 'TYPEORM_DATABASE') }}"
+
+- name: "starting pm2"
   shell: |
-    pm2 start npm --name backend -- start
+    sudo env PATH=$PATH:/usr/local/bin pm2 startup -u ubuntu
 
 
 
