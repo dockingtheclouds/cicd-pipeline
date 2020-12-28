@@ -1,49 +1,49 @@
-#---
-#- name: "update apt packages"
-#  become: yes
-#  apt:
-#    update_cache: yes
-#
-#- name: "upgrade package"
-#  become: yes
-#  apt:
-#    upgrade: yes
-#
-#- name: "install dependencies"
-#  become: yes
-#  apt:
-#    name: ['nodejs', 'npm']
-#    state: latest
-#    update_cache: yes
-#
-#- name: "install pm2"
-#  become: yes
-#  npm:
-#    name: pm2
-#    global: yes
-#    production: yes
-#    state: present
-#
-#- name: run node migration and save it to Memstash
-#  shell: |
-#    cd /home/ubuntu/backend
-#    npm run migrations > migration.txt
-#    cat migration.txt
-#    if grep -q "has been executed successfully" migration_result.txt
-#    then
-#    echo "migrate successful"
-#    curl -H "Content-Type: text/plain" -H "token: {{ lookup('env', 'TOKEN') }}" --request PUT \
-#      --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
-#    else
-#    echo "didnt migrate successfully"
-#    curl -H "Content-Type: text/plain" -H "token: {{ lookup('env', 'TOKEN') }}" --request PUT \
-#      --data "0" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
-#    fi
-#
-#- name: configure pm2 to run server
-#  shell: |
-#    pm2 start npm --name backend -- start
+---
+- name: "update apt packages"
+  become: yes
+  apt:
+    update_cache: yes
 
+- name: "upgrade package"
+  become: yes
+  apt:
+    upgrade: yes
+
+- name: "install dependencies"
+  become: yes
+  apt:
+    name: [ 'nodejs', 'npm' ]
+    state: latest
+    update_cache: yes
+
+- name: "install pm2"
+  become: yes
+  npm:
+    name: pm2
+    global: yes
+    production: yes
+    state: present
+
+- name: "configure environment variables"
+  environment:
+    ENVIRONMENT: "{{ lookup('env', 'ENVIRONMENT') }}"
+    TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
+    TYPEORM_ENTITIES: "{{ lookup('env', 'TYPEORM_ENTITIES') }}"
+    TYPEORM_HOST: "{{ lookup('env', 'TYPEORM_HOST') }}"
+    TYPEORM_PORT: "{{ lookup('env', 'TYPEORM_PORT') }}"
+    TYPEORM_USERNAME: "{{ lookup('env', 'TYPEORM_USERNAME') }}"
+    TYPEORM_PASSWORD: "{{ lookup('env', 'TYPEORM_PASSWORD') }}"
+    TYPEORM_DATABASE: "{{ lookup('env', 'TYPEORM_DATABASE') }}"
+
+- name: "configure pm2 to run server"
+  shell: |
+    pm2 start npm --name backend -- start
+    echo "Done"
+  register: results
+
+- name: print messages
+  debug:
+    msg: "{{ results.stdout_lines }}"
 
 
 
