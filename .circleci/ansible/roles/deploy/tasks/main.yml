@@ -7,6 +7,4 @@
 
 - name: start pm2
   become: yes
-  command: /usr/local/bin/pm2 start --name "backend" npm -- start
-  args:
-    chdir: /home/ubuntu/backend
+  command: chdir=/home/ubuntu/backend /usr/local/bin/pm2 start --name "backend" npm -- start
