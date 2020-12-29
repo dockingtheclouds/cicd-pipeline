@@ -313,16 +313,19 @@ jobs:
             echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "backend/.env"
             echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
-            tar cvzf backend.tar.gz backend
+            cd backend
+            npm install
+            npm run build
+            tar cvzf dist.tar.gz dist
             ls -ahl
       - run:
           name: Deploy backend
           command: |
             cd .circleci/ansible
             ansible-playbook -i inventory.txt deploy-backend.yml
-#      - destroy-environment:
-#          workflow_id: "${CIRCLE_WORKFLOW_ID}"
-#      - revert-migrations
+      - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID}"
+      - revert-migrations
 
   smoke-test:
     docker:
@@ -336,7 +339,7 @@ jobs:
       - run:
           name: Get backend url
           command: |
-            BACKEND_IP=$(curl -H "token: 7251a524-2f00-4920-a3bf-e4de84450e38" \
+            BACKEND_IP=$(curl -H "token: ${CIRCLE_WORKFLOW_ID}" \
               --request GET https://api.memstash.io/values/BACKEND_IP)
       - run:
           name: Backend smoke test.
@@ -352,9 +355,9 @@ jobs:
             else
               return 0
             fi
-#      - destroy-environment:
-#          workflow_id: "${CIRCLE_WORKFLOW_ID}"
-#      - revert-migrations
+      - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID}"
+      - revert-migrations
 
 
   cloudfront-update:

@@ -7,18 +7,5 @@
 - name: Copy backend tar.gz file and unzipping it
   become: yes
   unarchive:
-    src: ~/project/backend.tar.gz
+    src: ~/project/backend/dist.tar.gz
     dest: /home/ubuntu/backend
-    list_files: yes
-
-- name: install dependencies
-  become: yes
-  npm:
-    path: /home/ubuntu/backend
-
-- name: build backend
-  become: yes
-  shell: |
-    cd /home/ubuntu/backend
-    npm build
-    npm start:prod
