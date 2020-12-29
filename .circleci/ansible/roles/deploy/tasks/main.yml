@@ -9,3 +9,8 @@
   unarchive:
     src: ~/project/backend/dist.tar.gz
     dest: /home/ubuntu/backend
+
+- name: restart pm2 service
+  become: yes
+  shell: |
+    service pm2 restart
