@@ -53,4 +53,4 @@
 
 - name: "print message"
   debug:
-    msg: {{ status_result.stdout_lines }}
+    msg: "{{ status_result.stdout_lines }}"
