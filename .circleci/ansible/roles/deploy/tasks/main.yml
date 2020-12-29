@@ -1,0 +1,5 @@
+---
+- name: Copy backend files
+  template:
+    src: /root/project/backend/dist
+    dest: /home/ubuntu
