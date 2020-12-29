@@ -270,12 +270,14 @@ jobs:
               --request GET https://api.memstash.io/values/BACKEND_IP)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
+            cd frontend
+            npm update
+            npm run build
+            ls -alh
       - run:
           name: Deploy frontend objects
           command: |
-            cd frontend
-            npm run build
-            aws s3 cp ./dist s3://udapeople-"${CIRCLE_WORKFLOW_ID}"
+            aws s3 cp ~/project/frontend/dist s3://udapeople-"${CIRCLE_WORKFLOW_ID}"
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID}"
       - revert-migrations
