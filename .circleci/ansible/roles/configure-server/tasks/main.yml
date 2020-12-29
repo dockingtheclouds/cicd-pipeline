@@ -41,8 +41,9 @@
       TYPEORM_DATABASE: "{{ lookup('env', 'TYPEORM_DATABASE') }}"
 
 - name: "starting pm2"
+  become: yes
   shell: |
-    sudo env PATH=$PATH:/usr/local/bin pm2 startup -u ubuntu
+    env PATH=$PATH:/usr/local/bin pm2 startup -u ubuntu
 
 
 
