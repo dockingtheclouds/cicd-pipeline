@@ -1,11 +1,12 @@
 ---
-- name: Create directory
-  file:
-    path: /home/ubuntu/backend
-    state: directory
-
 - name: Copy backend tar.gz file and unzipping it
   become: yes
   unarchive:
-    src: ~/project/backend/dist.tar.gz
-    dest: /home/ubuntu/backend
+    src: ~/project/backend.tar.gz
+    dest: /home/ubuntu
+
+- name: start pm2
+  become: yes
+  command: /usr/local/bin/pm2 start --name "backend" npm -- start
+  args:
+    chdir: /home/ubuntu/backend

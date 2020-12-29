@@ -43,4 +43,4 @@
 - name: "starting pm2"
   become: yes
   shell: |
-    env PATH=$PATH:/usr/local/bin pm2 startup -u ubuntu
+    env PATH=$PATH:/usr/local/bin pm2 startup
