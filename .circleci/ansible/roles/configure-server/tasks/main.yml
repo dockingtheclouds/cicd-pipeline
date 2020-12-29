@@ -44,13 +44,3 @@
   become: yes
   shell: |
     env PATH=$PATH:/usr/local/bin pm2 startup -u ubuntu
-
-- name: "checking if pm2 service has started"
-  become: yes
-  shell: |
-    service pm2 status
-  register: status_result
-
-- name: "print message"
-  debug:
-    msg: "{{ status_result.stdout_lines }}"
