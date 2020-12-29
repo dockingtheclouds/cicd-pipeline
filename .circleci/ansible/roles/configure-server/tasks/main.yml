@@ -44,4 +44,3 @@
   become: yes
   shell: |
     env PATH=$PATH:/usr/local/bin pm2 startup -u ubuntu
-    service pm2 status
