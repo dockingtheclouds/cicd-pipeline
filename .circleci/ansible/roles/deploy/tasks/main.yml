@@ -5,6 +5,22 @@
     src: ~/project/backend.tar.gz
     dest: /home/ubuntu
 
+- name: installing dependencies
+  npm:
+    path: /home/ubuntu/backend
+
+- name: building packages
+  shell: npm run build
+  args:
+    chdir: /home/ubuntu/backend
+
+- name: run migration
+  shell: npm run migration
+  args:
+    - chdir: /home/ubuntu/backend
+
 - name: start pm2
   become: yes
-  command: chdir=/home/ubuntu/backend /usr/local/bin/pm2 start --name "backend" npm -- start
+  shell: /usr/local/bin/pm2 start --name "backend" npm -- start
+  args:
+    chdir: /home/ubuntu/backend
