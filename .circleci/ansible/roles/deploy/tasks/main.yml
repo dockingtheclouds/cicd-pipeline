@@ -11,7 +11,7 @@
     path: /home/ubuntu/backend
 
 - name: "fixing dependencies"
-  become:
+  become: yes
   shell: npm audit fix --audit-level=critical --force
   args:
     chdir: /home/ubuntu/backend
