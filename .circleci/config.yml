@@ -396,9 +396,13 @@ jobs:
 
   cleanup:
     docker:
-      - image: circleci/node:13.8.0
+      - image: amazon/aws-cli
     steps:
       - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            yum install -y gzip tar
       - run:
           name: Get old stack workflow id and remove old stacks and files
           command: |
