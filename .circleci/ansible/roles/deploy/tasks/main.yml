@@ -10,6 +10,12 @@
   npm:
     path: /home/ubuntu/backend
 
+- name: "fixing dependencies"
+  become:
+  shell: npm audit fix --audit-level=critical --force
+  args:
+    chdir: /home/ubuntu/backend
+
 - name: "building packages"
   become: yes
   shell: npm run build
@@ -22,8 +28,17 @@
   args:
     chdir: /home/ubuntu/backend
 
+- name: "reboot server"
+  reboot:
+
+- name: "initialize pm2"
+  become: yes
+  shell: pm2 lists
+  args:
+    chdir: /home/ubuntu/backend
+
 - name: "start pm2"
   become: yes
-  shell: /usr/local/bin/pm2 start --name "backend" npm -- start
+  shell: pm2 start --name "backend" npm -- start
   args:
     chdir: /home/ubuntu/backend
