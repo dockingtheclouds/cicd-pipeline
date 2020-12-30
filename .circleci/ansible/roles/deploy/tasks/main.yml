@@ -29,6 +29,7 @@
     chdir: /home/ubuntu/backend
 
 - name: "reboot server"
+  become: yes
   reboot:
 
 - name: "initialize pm2"
