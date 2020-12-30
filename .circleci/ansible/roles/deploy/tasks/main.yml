@@ -34,7 +34,7 @@
 
 - name: "initialize pm2"
   become: yes
-  shell: pm2 lists
+  shell: pm2 ls
   args:
     chdir: /home/ubuntu/backend
 
