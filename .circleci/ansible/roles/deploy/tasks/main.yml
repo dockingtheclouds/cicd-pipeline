@@ -1,25 +1,25 @@
 ---
-- name: Copy backend tar.gz file and unzipping it
+- name: "Copy backend tar.gz file and unzipping it"
   become: yes
   unarchive:
     src: ~/project/backend.tar.gz
     dest: /home/ubuntu
 
-- name: installing dependencies
+- name: "installing dependencies"
   npm:
     path: /home/ubuntu/backend
 
-- name: building packages
+- name: "building packages"
   shell: npm run build
   args:
     chdir: /home/ubuntu/backend
 
-- name: run migration
+- name: "run migration"
   shell: npm run migration
   args:
-    - chdir: /home/ubuntu/backend
+    chdir: /home/ubuntu/backend
 
-- name: start pm2
+- name: "start pm2"
   become: yes
   shell: /usr/local/bin/pm2 start --name "backend" npm -- start
   args:
