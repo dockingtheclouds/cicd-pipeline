@@ -18,7 +18,7 @@
 
 - name: "run migration"
   become: yes
-  shell: npm run migration
+  shell: npm run migrations
   args:
     chdir: /home/ubuntu/backend
 
