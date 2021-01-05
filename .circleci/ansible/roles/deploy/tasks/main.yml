@@ -10,15 +10,15 @@
   npm:
     path: /home/ubuntu/backend
 
-- name: "fixing dependencies"
-  become: yes
-  shell: npm audit fix --audit-level=critical --force
-  args:
-    chdir: /home/ubuntu/backend
-
 - name: "building packages"
   become: yes
   shell: npm run build
+  args:
+    chdir: /home/ubuntu/backend
+
+- name: "fixing dependencies"
+  become: yes
+  shell: npm audit fix --audit-level=critical --force
   args:
     chdir: /home/ubuntu/backend
 
