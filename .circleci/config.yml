@@ -226,7 +226,7 @@ jobs:
             pip3 install --upgrade pip
             pip3 --no-cache-dir install --upgrade awscli
       - run:
-          name: installing dependencies
+          name: installing dependenciess
           command: |
             cd backend
             npm install
