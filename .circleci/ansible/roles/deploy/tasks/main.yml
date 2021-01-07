@@ -1,4 +1,9 @@
 ---
+- name: "upgrade packages"
+  become: yes
+  apt:
+    upgrade: yes
+
 - name: "Copy backend tar.gz file and unzipping it"
   become: yes
   unarchive:
