@@ -2,7 +2,7 @@
 - name: "upgrade packages"
   become: yes
   apt:
-    upgrade: yes
+    upgrade: "yes"
 
 - name: "Copy backend tar.gz file and unzipping it"
   become: yes
@@ -15,17 +15,17 @@
   npm:
     path: /home/ubuntu/backend
 
-- name: "building packages"
+- name: "starting app"
   become: yes
-  shell: npm run build
+  shell: npm run start:prod
   args:
     chdir: /home/ubuntu/backend
 
-- name: "fixing dependencies"
-  become: yes
-  shell: npm audit fix --audit-level=critical --force
-  args:
-    chdir: /home/ubuntu/backend
+#- name: "fixing dependencies"
+#  become: yes
+#  shell: npm audit fix --audit-level=critical --force
+#  args:
+#    chdir: /home/ubuntu/backend
 
 - name: "run migration"
   become: yes
