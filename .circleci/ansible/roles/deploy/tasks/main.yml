@@ -15,18 +15,6 @@
   npm:
     path: /home/ubuntu/backend
 
-#- name: "starting app"
-#  become: yes
-#  shell: npm run start
-#  args:
-#    chdir: /home/ubuntu/backend
-
-#- name: "fixing dependencies"
-#  become: yes
-#  shell: npm audit fix --audit-level=critical --force
-#  args:
-#    chdir: /home/ubuntu/backend
-
 - name: "run migration"
   become: yes
   shell: npm run migrations
