@@ -2,4 +2,4 @@ GitHub Repository - https://github.com/dockingtheclouds/cicd-pipeline
 Public URL for S3 bucket - http://udapeople-d4459643-4cf1-4463-b5f8-0090eed41988.s3-website-us-west-1.amazonaws.com
 Public URL for CloudFront - http://udapeople-264f477d-ca0e-4620-9bad-2af0c54661a7.s3.amazonaws.com
 Public URL for back-end EC2 - http://ec2-18-144-15-94.us-west-1.compute.amazonaws.com:3030/api/status
-Public URL for prometheus server - http://ec2-3-101-53-150.us-west-1.compute.amazonaws.com:9090/
+Public URL for prometheus server - http://ec2-3-101-53-150.us-west-1.compute.amazonaws.com:9090
